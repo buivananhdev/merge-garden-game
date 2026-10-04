@@ -6,41 +6,43 @@
   <title>Merge Garden</title>
   <style>
     :root {
-      --bg-1: #f7f0e3;
-      --bg-2: #f0dfc6;
+      --bg-1: #f7f1e7;
+      --bg-2: #eddcb8;
       --panel: rgba(255,255,255,0.78);
-      --board: #d9c3a0;
-      --cell: #f9f2e0;
-      --text: #2d241f;
-      --muted: #6d584b;
-      --accent: #ff8c5a;
+      --board: #d7c4a0;
+      --cell: #f9f3e2;
+      --text: #2d241e;
+      --muted: #6b5648;
+      --accent: #ff8b5e;
       --accent-2: #ffc95d;
       --success: #4ab85c;
-      --shadow: rgba(62, 42, 26, 0.18);
-      --danger: #ef6a72;
+      --shadow: rgba(55, 40, 25, 0.18);
+      --danger: #ef6d71;
+      --highlight: rgba(255,255,255,0.7);
     }
 
     * { box-sizing: border-box; }
     html, body {
+      width: 100%;
+      min-height: 100%;
       margin: 0;
-      height: 100%;
       font-family: Arial, Helvetica, sans-serif;
       background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
       color: var(--text);
     }
     body {
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 20px;
+      justify-content: center;
+      padding: 18px;
     }
 
     .game-shell {
-      width: min(94vw, 470px);
+      width: min(92vw, 470px);
       background: var(--panel);
       border-radius: 28px;
       border: 1px solid rgba(100,80,60,0.07);
-      box-shadow: 0 22px 42px var(--shadow);
+      box-shadow: 0 22px 40px var(--shadow);
       backdrop-filter: blur(12px);
       padding: 16px 14px 18px;
     }
@@ -49,7 +51,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .brand {
@@ -59,7 +61,7 @@
     }
 
     .mini-badge {
-      background: rgba(255,255,255,0.72);
+      background: rgba(255,255,255,0.75);
       padding: 8px 12px;
       border-radius: 12px;
       font-size: 0.78rem;
@@ -120,12 +122,12 @@
       aspect-ratio: 1 / 1;
       border-radius: 16px;
       background: var(--cell);
-      border: 2px solid rgba(0,0,0,0.06);
+      border: 2px solid rgba(0,0,0,0.05);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       overflow: hidden;
+      cursor: pointer;
       transition: transform 0.12s ease;
     }
 
@@ -180,9 +182,10 @@
     button:active { transform: translateY(1px) scale(0.99); }
     button:hover { filter: brightness(1.03); }
 
-    .primary { background: linear-gradient(180deg, var(--accent), #ec7042); color: white; }
-    .secondary { background: #f4e4ba; color: var(--text); }
-    .warn { background: linear-gradient(180deg, #53b9c7, #2d9aa8); color: white; }
+    .primary { background: linear-gradient(180deg, var(--accent), #eb7042); color: white; }
+    .secondary { background: #f4e5c0; color: var(--text); }
+    .warn { background: linear-gradient(180deg, #4bb7c7, #2e9ca7); color: white; }
+
     .shop {
       margin-top: 14px;
       display: grid;
@@ -191,19 +194,19 @@
     }
 
     .shop-card {
-      background: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.78);
       border-radius: 14px;
-      padding: 10px 7px;
+      padding: 10px 8px;
       text-align: center;
       box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
     }
 
     .shop-title {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 900;
       text-transform: uppercase;
-      color: var(--muted);
       letter-spacing: 0.08em;
+      color: var(--muted);
       margin-bottom: 4px;
     }
 
@@ -216,7 +219,7 @@
 
     .shop-btn {
       width: 100%;
-      background: linear-gradient(180deg, #f7d77b, #f0ba47);
+      background: linear-gradient(180deg, #f9dc7b, #f0ba45);
       border: none;
       border-radius: 10px;
       padding: 9px 6px;
@@ -230,7 +233,7 @@
     }
 
     .message {
-      min-height: 30px;
+      min-height: 32px;
       margin-top: 12px;
       text-align: center;
       font-size: 0.86rem;
@@ -238,12 +241,24 @@
       color: var(--muted);
     }
 
+    .helper {
+      margin-top: 12px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.38);
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
     @media (max-width: 420px) {
       .board { min-height: 300px; }
       .shop { grid-template-columns: 1fr; }
       .hud { grid-template-columns: repeat(2, 1fr); }
       .value { font-size: 1rem; }
-      .brand { font-size: 1.3rem; }
+      .brand { font-size: 1.32rem; }
     }
   </style>
 </head>
@@ -286,6 +301,7 @@
 
     <div class="shop" id="shop"></div>
 
+    <div class="helper">Merge the same crops to grow bigger items, unlock upgrades, and reach the next level.</div>
     <div class="message" id="statusMessage">Fresh soil ready. Start merging your crops!</div>
   </div>
 
@@ -318,11 +334,7 @@
       combo: 1,
       goal: 100,
       lastMessage: 'Fresh soil ready. Start merging your crops!',
-      upgrades: {
-        water: 0,
-        soil: 0,
-        luck: 0
-      },
+      upgrades: { water: 0, soil: 0, luck: 0 },
       dailyClaimed: false
     };
 
@@ -379,8 +391,7 @@
 
     function placeRandomCell(x, y) {
       if (board[x][y] !== null) return;
-      const value = sampleValue();
-      board[x][y] = value;
+      board[x][y] = sampleValue();
     }
 
     function addRandomItem() {
@@ -481,17 +492,21 @@
       Object.entries(upgradeDefs).forEach(([key, def]) => {
         const card = document.createElement('div');
         card.className = 'shop-card';
+
         const title = document.createElement('div');
         title.className = 'shop-title';
         title.textContent = def.title;
+
         const cost = document.createElement('div');
         cost.className = 'shop-cost';
         cost.textContent = `Cost: ${getUpgradeCost(key)} coins`;
+
         const button = document.createElement('button');
         button.className = 'shop-btn';
         button.textContent = `Lv ${state.upgrades[key]}`;
         button.disabled = state.coins < getUpgradeCost(key);
         button.addEventListener('click', () => buyUpgrade(key));
+
         card.appendChild(title);
         card.appendChild(cost);
         card.appendChild(button);
@@ -590,14 +605,13 @@
     }
 
     document.getElementById('produceBtn').addEventListener('click', () => {
-      const extraChance = state.upgrades.luck > 0 ? 0.18 : 0;
       const success = addRandomItem();
       if (success) {
         const bonus = 15 + (state.upgrades.water * 5);
         resolveBoard();
         state.score += bonus;
         state.coins += 3 + state.upgrades.water;
-        if (Math.random() < extraChance) {
+        if (Math.random() < (state.upgrades.luck > 0 ? 0.18 : 0.08)) {
           state.coins += 5;
           state.lastMessage = 'Lucky harvest! Bonus coins earned.';
         } else {
