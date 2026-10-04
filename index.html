@@ -6,17 +6,17 @@
   <title>Merge Garden</title>
   <style>
     :root {
-      --bg-1: #f5f0e8;
-      --bg-2: #eedfc9;
-      --panel: rgba(255, 255, 255, 0.75);
-      --board: #d9c4a0;
-      --cell: #f9f0dd;
-      --text: #332922;
-      --muted: #6e584d;
-      --accent: #ff8b5e;
-      --accent-2: #ffc857;
-      --success: #4abf68;
-      --shadow: rgba(53, 39, 24, 0.18);
+      --bg-1: #f7f0e3;
+      --bg-2: #f0dfc6;
+      --panel: rgba(255,255,255,0.78);
+      --board: #d9c3a0;
+      --cell: #f9f2e0;
+      --text: #2d241f;
+      --muted: #6d584b;
+      --accent: #ff8c5a;
+      --accent-2: #ffc95d;
+      --success: #4ab85c;
+      --shadow: rgba(62, 42, 26, 0.18);
       --danger: #ef6a72;
     }
 
@@ -30,19 +30,19 @@
     }
     body {
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 18px;
+      align-items: center;
+      padding: 20px;
     }
 
     .game-shell {
-      width: min(92vw, 440px);
+      width: min(94vw, 470px);
       background: var(--panel);
-      border-radius: 30px;
-      border: 1px solid rgba(100, 80, 60, 0.06);
-      box-shadow: 0 22px 40px var(--shadow);
-      padding: 18px 14px 16px;
+      border-radius: 28px;
+      border: 1px solid rgba(100,80,60,0.07);
+      box-shadow: 0 22px 42px var(--shadow);
       backdrop-filter: blur(12px);
+      padding: 16px 14px 18px;
     }
 
     .top-bar {
@@ -55,27 +55,27 @@
     .brand {
       font-size: 1.5rem;
       font-weight: 900;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
     }
 
     .mini-badge {
       background: rgba(255,255,255,0.72);
       padding: 8px 12px;
       border-radius: 12px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 800;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
     }
 
     .hud {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .stat {
-      background: rgba(255,255,255,0.78);
+      background: rgba(255,255,255,0.8);
       border-radius: 16px;
       padding: 9px 8px;
       text-align: center;
@@ -84,22 +84,22 @@
 
     .label {
       display: block;
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
+      font-size: 0.6rem;
       text-transform: uppercase;
+      letter-spacing: 0.08em;
       color: var(--muted);
       font-weight: 800;
       margin-bottom: 5px;
     }
 
     .value {
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       font-weight: 900;
     }
 
     .board-wrap {
-      background: rgba(255,255,255,0.35);
-      border-radius: 20px;
+      background: rgba(255,255,255,0.36);
+      border-radius: 18px;
       padding: 12px;
       box-shadow: inset 0 0 0 2px rgba(0,0,0,0.03);
     }
@@ -111,7 +111,7 @@
       background: var(--board);
       padding: 10px;
       border-radius: 18px;
-      min-height: 345px;
+      min-height: 350px;
     }
 
     .cell {
@@ -129,16 +129,13 @@
       transition: transform 0.12s ease;
     }
 
-    .cell:hover {
-      transform: translateY(-1px);
-    }
-
+    .cell:hover { transform: translateY(-2px); }
     .cell.empty::before {
       content: "＋";
       position: absolute;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 900;
-      color: rgba(60, 52, 44, 0.18);
+      color: rgba(60,52,44,0.18);
     }
 
     .item {
@@ -150,7 +147,7 @@
       justify-content: center;
       font-size: clamp(1.2rem, 4vw, 2rem);
       font-weight: 900;
-      box-shadow: inset 0 -10px 16px rgba(255,255,255,0.18), 0 10px 20px rgba(0,0,0,0.08);
+      box-shadow: inset 0 -10px 14px rgba(255,255,255,0.18), 0 8px 16px rgba(0,0,0,0.08);
       color: #fff;
       text-shadow: 0 2px 0 rgba(0,0,0,0.16);
       animation: pop 0.18s ease;
@@ -163,9 +160,9 @@
     }
 
     .controls {
-      margin-top: 16px;
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      margin-top: 16px;
     }
 
     button {
@@ -177,41 +174,76 @@
       font-weight: 800;
       cursor: pointer;
       transition: transform 0.08s ease, filter 0.15s ease;
-      box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
     }
 
     button:active { transform: translateY(1px) scale(0.99); }
-    button:hover { filter: brightness(1.02); }
+    button:hover { filter: brightness(1.03); }
 
-    .primary {
-      background: linear-gradient(180deg, var(--accent), #ed6d44);
-      color: white;
+    .primary { background: linear-gradient(180deg, var(--accent), #ec7042); color: white; }
+    .secondary { background: #f4e4ba; color: var(--text); }
+    .warn { background: linear-gradient(180deg, #53b9c7, #2d9aa8); color: white; }
+    .shop {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
-    .secondary {
-      background: #f3e5bf;
+    .shop-card {
+      background: rgba(255,255,255,0.75);
+      border-radius: 14px;
+      padding: 10px 7px;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+    }
+
+    .shop-title {
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .shop-cost {
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-bottom: 6px;
       color: var(--text);
     }
 
-    .warn {
-      background: linear-gradient(180deg, #4eb6c4, #2e9ca8);
-      color: white;
+    .shop-btn {
+      width: 100%;
+      background: linear-gradient(180deg, #f7d77b, #f0ba47);
+      border: none;
+      border-radius: 10px;
+      padding: 9px 6px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .shop-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
     .message {
-      min-height: 32px;
+      min-height: 30px;
       margin-top: 12px;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       font-weight: 700;
       color: var(--muted);
     }
 
     @media (max-width: 420px) {
-      .board { min-height: 304px; }
-      .hud { gap: 7px; }
+      .board { min-height: 300px; }
+      .shop { grid-template-columns: 1fr; }
+      .hud { grid-template-columns: repeat(2, 1fr); }
       .value { font-size: 1rem; }
-      .brand { font-size: 1.2rem; }
+      .brand { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -248,8 +280,11 @@
     <div class="controls">
       <button class="primary" id="produceBtn">Produce</button>
       <button class="secondary" id="boostBtn">Boost</button>
+      <button class="warn" id="dailyBtn">Daily</button>
       <button class="warn" id="resetBtn">Reset</button>
     </div>
+
+    <div class="shop" id="shop"></div>
 
     <div class="message" id="statusMessage">Fresh soil ready. Start merging your crops!</div>
   </div>
@@ -270,13 +305,25 @@
       9: { emoji: '✨', a: '#ffb5d9', b: '#ff75a8' }
     };
 
+    const upgradeDefs = {
+      water: { title: 'Water', baseCost: 20, description: '+20% produce' },
+      soil: { title: 'Soil', baseCost: 25, description: '+25% merge reward' },
+      luck: { title: 'Luck', baseCost: 30, description: '+15% rare spawn' }
+    };
+
     const state = {
       score: 0,
       coins: 0,
       level: 1,
       combo: 1,
       goal: 100,
-      lastMessage: 'Fresh soil ready. Start merging your crops!'
+      lastMessage: 'Fresh soil ready. Start merging your crops!',
+      upgrades: {
+        water: 0,
+        soil: 0,
+        luck: 0
+      },
+      dailyClaimed: false
     };
 
     const boardEl = document.getElementById('board');
@@ -286,6 +333,7 @@
     const goalValueEl = document.getElementById('goalValue');
     const statusMessageEl = document.getElementById('statusMessage');
     const comboBadgeEl = document.getElementById('comboBadge');
+    const shopEl = document.getElementById('shop');
 
     function createCell(x, y) {
       const cell = document.createElement('div');
@@ -298,7 +346,7 @@
           resolveBoard();
           renderBoard();
           updateHud();
-          playTone(430, 0.04, 'triangle');
+          playTone(390, 0.04, 'triangle');
         }
       });
       return cell;
@@ -324,24 +372,15 @@
     function sampleValue() {
       const roll = Math.random();
       if (roll < 0.58) return randomValue();
-      if (roll < 0.78) return 5;
+      if (roll < 0.8) return 5;
       if (roll < 0.9) return 6;
       return 7;
     }
 
-    function countEmptyCells() {
-      let count = 0;
-      for (let x = 0; x < BOARD_SIZE; x++) {
-        for (let y = 0; y < BOARD_SIZE; y++) {
-          if (board[x][y] === null) count++;
-        }
-      }
-      return count;
-    }
-
     function placeRandomCell(x, y) {
       if (board[x][y] !== null) return;
-      board[x][y] = sampleValue();
+      const value = sampleValue();
+      board[x][y] = value;
     }
 
     function addRandomItem() {
@@ -351,7 +390,6 @@
           if (board[x][y] === null) empties.push([x, y]);
         }
       }
-
       if (!empties.length) return false;
       const [x, y] = empties[Math.floor(Math.random() * empties.length)];
       board[x][y] = sampleValue();
@@ -361,7 +399,6 @@
     function compactBoard() {
       const newBoard = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
       let writeIndex = 0;
-
       for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
           const value = board[x][y];
@@ -373,7 +410,6 @@
           }
         }
       }
-
       for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
           board[x][y] = newBoard[x][y];
@@ -384,12 +420,10 @@
     function mergeAdjacent() {
       let didMerge = false;
       let mergeCount = 0;
-
       for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
           const current = board[x][y];
           if (current === null) continue;
-
           const right = y + 1 < BOARD_SIZE ? board[x][y + 1] : null;
           const down = x + 1 < BOARD_SIZE ? board[x + 1][y] : null;
 
@@ -398,16 +432,22 @@
             board[x][y + 1] = null;
             mergeCount += 1;
             didMerge = true;
-            state.score += current * 35;
-            state.coins += current * 6;
+            const rewardBase = current * 35;
+            const rewardBoost = 1 + (state.upgrades.soil * 0.25);
+            const gained = Math.round(rewardBase * rewardBoost);
+            state.score += gained;
+            state.coins += current * 6 + state.upgrades.water;
             state.combo = Math.min(9, state.combo + 1);
           } else if (down === current) {
             board[x][y] = current + 1;
             board[x + 1][y] = null;
             mergeCount += 1;
             didMerge = true;
-            state.score += current * 35;
-            state.coins += current * 6;
+            const rewardBase = current * 35;
+            const rewardBoost = 1 + (state.upgrades.soil * 0.25);
+            const gained = Math.round(rewardBase * rewardBoost);
+            state.score += gained;
+            state.coins += current * 6 + state.upgrades.water;
             state.combo = Math.min(9, state.combo + 1);
           }
         }
@@ -415,10 +455,9 @@
 
       if (mergeCount > 0) {
         playTone(620, 0.08, 'sine');
-        setTimeout(() => playTone(780, 0.06, 'triangle'), 60);
+        setTimeout(() => playTone(760, 0.06, 'triangle'), 50);
         state.lastMessage = `Perfect merge! +${mergeCount * 35} score`;
       }
-
       return didMerge;
     }
 
@@ -430,8 +469,48 @@
         compactBoard();
         pass += 1;
       }
-
       if (!changed) state.combo = 1;
+    }
+
+    function getUpgradeCost(key) {
+      return upgradeDefs[key].baseCost + state.upgrades[key] * 12;
+    }
+
+    function renderShop() {
+      shopEl.innerHTML = '';
+      Object.entries(upgradeDefs).forEach(([key, def]) => {
+        const card = document.createElement('div');
+        card.className = 'shop-card';
+        const title = document.createElement('div');
+        title.className = 'shop-title';
+        title.textContent = def.title;
+        const cost = document.createElement('div');
+        cost.className = 'shop-cost';
+        cost.textContent = `Cost: ${getUpgradeCost(key)} coins`;
+        const button = document.createElement('button');
+        button.className = 'shop-btn';
+        button.textContent = `Lv ${state.upgrades[key]}`;
+        button.disabled = state.coins < getUpgradeCost(key);
+        button.addEventListener('click', () => buyUpgrade(key));
+        card.appendChild(title);
+        card.appendChild(cost);
+        card.appendChild(button);
+        shopEl.appendChild(card);
+      });
+    }
+
+    function buyUpgrade(key) {
+      const cost = getUpgradeCost(key);
+      if (state.coins < cost) {
+        state.lastMessage = `Need ${cost} coins for ${upgradeDefs[key].title}.`;
+        updateHud();
+        return;
+      }
+      state.coins -= cost;
+      state.upgrades[key] += 1;
+      state.lastMessage = `${upgradeDefs[key].title} upgraded!`;
+      renderShop();
+      updateHud();
     }
 
     function updateHud() {
@@ -443,19 +522,18 @@
       levelValueEl.textContent = state.level;
       goalValueEl.textContent = state.goal;
       statusMessageEl.textContent = state.lastMessage;
+      renderShop();
     }
 
     function renderBoard() {
       const cells = boardEl.children;
       let index = 0;
-
       for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
           const cell = cells[index];
           const value = board[x][y];
           cell.classList.toggle('empty', value === null);
           cell.innerHTML = '';
-
           if (value !== null) {
             const meta = ITEMS[value] || ITEMS[9];
             const item = document.createElement('div');
@@ -464,7 +542,6 @@
             item.style.background = `linear-gradient(180deg, ${meta.a}, ${meta.b})`;
             cell.appendChild(item);
           }
-
           index += 1;
         }
       }
@@ -473,18 +550,14 @@
     function playTone(freq, duration, type = 'sine') {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
-
       const audioCtx = new AudioCtx();
       const oscillator = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-
       oscillator.type = type;
       oscillator.frequency.value = freq;
       gain.gain.value = 0.04;
-
       oscillator.connect(gain);
       gain.connect(audioCtx.destination);
-
       oscillator.start();
       setTimeout(() => {
         oscillator.stop();
@@ -500,31 +573,36 @@
           board[x][y] = null;
         }
       }
-
       state.score = 0;
       state.coins = 0;
       state.level = 1;
       state.combo = 1;
       state.goal = 100;
       state.lastMessage = 'Fresh soil ready. Start merging your crops!';
-
+      state.dailyClaimed = false;
       board[0][0] = 1;
       board[0][1] = 1;
       board[1][0] = 2;
       board[2][2] = 3;
       board[4][4] = 2;
-
       renderBoard();
       updateHud();
     }
 
     document.getElementById('produceBtn').addEventListener('click', () => {
+      const extraChance = state.upgrades.luck > 0 ? 0.18 : 0;
       const success = addRandomItem();
       if (success) {
+        const bonus = 15 + (state.upgrades.water * 5);
         resolveBoard();
-        state.score += 15;
-        state.coins += 3;
-        state.lastMessage = 'New seed has arrived!';
+        state.score += bonus;
+        state.coins += 3 + state.upgrades.water;
+        if (Math.random() < extraChance) {
+          state.coins += 5;
+          state.lastMessage = 'Lucky harvest! Bonus coins earned.';
+        } else {
+          state.lastMessage = 'New seed has arrived!';
+        }
       } else {
         state.lastMessage = 'Board is full! Merge some crops first.';
       }
@@ -539,15 +617,30 @@
         updateHud();
         return;
       }
-
       state.coins -= 15;
       for (let i = 0; i < 3; i++) addRandomItem();
       resolveBoard();
-      state.score += 50;
-      state.lastMessage = 'Boost activated. Fresh plants have spawned!';
+      state.score += 60 + state.upgrades.soil * 10;
+      state.lastMessage = 'Boost activated. New plants have sprouted!';
       renderBoard();
       updateHud();
-      playTone(510, 0.08, 'sawtooth');
+      playTone(500, 0.08, 'sawtooth');
+    });
+
+    document.getElementById('dailyBtn').addEventListener('click', () => {
+      if (state.dailyClaimed) {
+        state.lastMessage = 'Daily reward already claimed today.';
+        updateHud();
+        return;
+      }
+      const reward = 20 + state.level * 5;
+      state.coins += reward;
+      state.score += reward * 3;
+      state.dailyClaimed = true;
+      state.lastMessage = `Daily reward claimed: +${reward} coins!`;
+      renderBoard();
+      updateHud();
+      playTone(660, 0.06, 'square');
     });
 
     document.getElementById('resetBtn').addEventListener('click', resetGame);
