@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merge Garden</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --panel: #fffaf3;
+      --board: #d7c7b4;
+      --cell: #f6efe5;
+      --text: #3d2d21;
+      --accent: #ff9f43;
+      --accent2: #ffcf5a;
+      --shadow: rgba(0, 0, 0, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #f6f2eb 0%, #f1e5d8 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .game {
+      width: min(92vw, 420px);
+      background: var(--panel);
+      border-radius: 24px;
+      box-shadow: 0 18px 35px var(--shadow);
+      padding: 18px 16px 20px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .title {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .score-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      background: var(--board);
+      padding: 12px;
+      border-radius: 18px;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.04);
+    }
+
+    .cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--cell);
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border: 2px solid rgba(0,0,0,0.06);
+      user-select: none;
+      overflow: hidden;
+      transition: transform 0.15s ease;
+    }
+
+    .cell:hover {
+      transform: translateY(-2px);
+    }
+
+    .item {
+      width: 74%;
+      height: 74%;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: clamp(18px, 4vw, 26px);
+      box-shadow: inset 0 -8px 12px rgba(255,255,255,0.18), 0 8px 18px rgba(0,0,0,0.08);
+      color: #fff;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.12);
+      animation: pop 0.18s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.7); opacity: 0.2; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .controls {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.08);
+    }
+
+    button:active { transform: translateY(1px) scale(0.99); }
+
+    .primary {
+      background: linear-gradient(180deg, var(--accent), #ff7f50);
+      color: white;
+    }
+
+    .secondary {
+      background: #f4e5bf;
+      color: var(--text);
+    }
+
+    .footer {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #655647;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <div class="topbar">
+      <div class="title">Merge Garden</div>
+      <div class="score-box">Score: <span id="score">0</span></div>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="controls">
+      <button class="primary" id="generateBtn">Produce</button>
+      <button class="secondary" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="footer">Merge same plants to grow bigger!</div>
+  </div>
+
+  <script>
+    const rows = 4;
+    const cols = 4;
+    const board = Array.from({ length: rows }, () => Array(cols).fill(null));
+    const cellColors = {
+      1: "#8dce6d",
+      2: "#66bb6a",
+      3: "#4caf50",
+      4: "#2e7d32",
+      5: "#ffb703",
+      6: "#f77f00",
+      7: "#ef476f",
+      8: "#ef233c"
+    };
+
+    let score = 0;
+
+    const boardEl = document.getElementById("board");
+    const scoreEl = document.getElementById("score");
+
+    function createCellMarkup(x, y) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.dataset.x = x;
+      cell.dataset.y = y;
+      cell.addEventListener("click", () => {
+        if (!board[x][y]) {
+          placeRandomOnCell(x, y);
+          resolveMerges();
+          renderBoard();
+        }
+      });
+      return cell;
+    }
+
+    function initBoard() {
+      boardEl.innerHTML = "";
+      for (let x = 0; x < rows; x++) {
+        for (let y = 0; y < cols; y++) {
+          const cell = createCellMarkup(x, y);
+          boardEl.appendChild(cell);
+        }
+      }
+      renderBoard();
+    }
+
+    function randomItemValue() {
+      const roll = Math.random();
+      if (roll < 0.65) return 1;
+      if (roll < 0.85) return 2;
+      if (roll < 0.95) return 3;
+      return 4;
+    }
+
+    function emptyCellExists() {
+      return board.some(row => row.some(v => v === null));
+    }
+
+    function placeRandomOnCell(x, y) {
+      if (board[x][y] !== null) return;
+      board[x][y] = randomItemValue();
+    }
+
+    function generateRandom() {
+      if (!emptyCellExists()) {
+        resolveMerges();
+        renderBoard();
+        return;
+      }
+
+      let attempts = 0;
+      while (attempts < 50) {
+        const x = Math.floor(Math.random() * rows);
+        const y = Math.floor(Math.random() * cols);
+        if (board[x][y] === null) {
+          board[x][y] = randomItemValue();
+          break;
+        }
+        attempts++;
+      }
+
+      resolveMerges();
+      renderBoard();
+    }
+
+    function mergeAdjacentCells() {
+      let merged = false;
+
+      for (let x = 0; x < rows; x++) {
+        for (let y = 0; y < cols; y++) {
+          const current = board[x][y];
+          if (current === null) continue;
+
+          const right = y + 1 < cols ? board[x][y + 1] : null;
+          const down = x + 1 < rows ? board[x + 1][y] : null;
+
+          if (right !== null && right === current) {
+            board[x][y] = current + 1;
+            board[x][y + 1] = null;
+            score += current * 10;
+            merged = true;
+          } else if (down !== null && down === current) {
+            board[x][y] = current + 1;
+            board[x + 1][y] = null;
+            score += current * 10;
+            merged = true;
+          }
+        }
+      }
+
+      return merged;
+    }
+
+    function resolveMerges() {
+      let changed = true;
+      let passes = 0;
+      while (changed && passes < 10) {
+        changed = mergeAdjacentCells();
+        passes++;
+      }
+
+      for (let x = 0; x < rows; x++) {
+        for (let y = 0; y < cols; y++) {
+          if (board[x][y] === null) {
+            for (let x2 = x; x2 < rows; x2++) {
+              for (let y2 = (x2 === x ? y : 0); y2 < cols; y2++) {
+                if (board[x2][y2] !== null) {
+                  board[x][y] = board[x2][y2];
+                  board[x2][y2] = null;
+                  return;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function renderBoard() {
+      const cells = boardEl.children;
+      let index = 0;
+      for (let x = 0; x < rows; x++) {
+        for (let y = 0; y < cols; y++) {
+          const cell = cells[index];
+          const value = board[x][y];
+          if (value === null) {
+            cell.innerHTML = "";
+          } else {
+            const item = document.createElement("div");
+            item.className = "item";
+            item.textContent = value >= 10 ? "★" : value;
+            item.style.background = `linear-gradient(180deg, ${cellColors[value] || "#8ecae6"}, ${cellColors[value + 1] || "#6a4c93"})`;
+            cell.innerHTML = "";
+            cell.appendChild(item);
+          }
+          index++;
+        }
+      }
+      scoreEl.textContent = score;
+    }
+
+    function resetGame() {
+      for (let x = 0; x < rows; x++) {
+        for (let y = 0; y < cols; y++) {
+          board[x][y] = null;
+        }
+      }
+      score = 0;
+      board[0][0] = 1;
+      board[0][1] = 1;
+      board[1][0] = 2;
+      board[2][2] = 1;
+      renderBoard();
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateRandom);
+    document.getElementById("resetBtn").addEventListener("click", resetGame);
+
+    initBoard();
+    resetGame();
+  </script>
+</body>
+</html>
