@@ -6,21 +6,21 @@
   <title>Merge Garden</title>
   <style>
     :root {
-      --bg-1: #f7f1e7;
-      --bg-2: #f2e7d5;
-      --panel: rgba(255,255,255,0.75);
-      --board: #d8c6a9;
-      --cell: #f7eddc;
-      --text: #2f261f;
+      --bg-1: #f5f0e8;
+      --bg-2: #eedfc9;
+      --panel: rgba(255, 255, 255, 0.75);
+      --board: #d9c4a0;
+      --cell: #f9f0dd;
+      --text: #332922;
       --muted: #6e584d;
       --accent: #ff8b5e;
       --accent-2: #ffc857;
       --success: #4abf68;
-      --shadow: rgba(63, 40, 17, 0.18);
+      --shadow: rgba(53, 39, 24, 0.18);
+      --danger: #ef6a72;
     }
 
     * { box-sizing: border-box; }
-
     html, body {
       margin: 0;
       height: 100%;
@@ -28,27 +28,48 @@
       background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
       color: var(--text);
     }
-
     body {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 18px;
     }
 
     .game-shell {
       width: min(92vw, 440px);
       background: var(--panel);
-      border: 1px solid rgba(100, 80, 60, 0.08);
-      border-radius: 28px;
-      box-shadow: 0 22px 38px var(--shadow);
-      backdrop-filter: blur(10px);
-      padding: 16px 14px 18px;
+      border-radius: 30px;
+      border: 1px solid rgba(100, 80, 60, 0.06);
+      box-shadow: 0 22px 40px var(--shadow);
+      padding: 18px 14px 16px;
+      backdrop-filter: blur(12px);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .mini-badge {
+      background: rgba(255,255,255,0.72);
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
     }
 
     .hud {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin-bottom: 14px;
     }
@@ -56,23 +77,23 @@
     .stat {
       background: rgba(255,255,255,0.78);
       border-radius: 16px;
+      padding: 9px 8px;
       text-align: center;
-      padding: 10px 8px;
       box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
     }
 
     .label {
       display: block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
+      font-size: 0.62rem;
       letter-spacing: 0.08em;
-      margin-bottom: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 5px;
     }
 
     .value {
-      font-size: 1.14rem;
+      font-size: 1.1rem;
       font-weight: 900;
     }
 
@@ -90,7 +111,7 @@
       background: var(--board);
       padding: 10px;
       border-radius: 18px;
-      min-height: 360px;
+      min-height: 345px;
     }
 
     .cell {
@@ -99,25 +120,25 @@
       aspect-ratio: 1 / 1;
       border-radius: 16px;
       background: var(--cell);
-      border: 2px solid rgba(80,60,36,0.08);
+      border: 2px solid rgba(0,0,0,0.06);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.12s ease;
       overflow: hidden;
+      transition: transform 0.12s ease;
     }
 
     .cell:hover {
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
 
     .cell.empty::before {
-      content: "+";
+      content: "＋";
       position: absolute;
-      font-size: 1.7rem;
-      color: rgba(76,58,36,0.22);
-      font-weight: 700;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: rgba(60, 52, 44, 0.18);
     }
 
     .item {
@@ -127,17 +148,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-size: clamp(1.2rem, 4vw, 2rem);
       font-weight: 900;
       box-shadow: inset 0 -10px 16px rgba(255,255,255,0.18), 0 10px 20px rgba(0,0,0,0.08);
-      color: white;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.15);
+      color: #fff;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.16);
       animation: pop 0.18s ease;
       user-select: none;
-    }
-
-    .cell.merged .item {
-      animation: burst 0.25s ease;
     }
 
     @keyframes pop {
@@ -145,16 +162,10 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-    @keyframes burst {
-      0% { transform: scale(0.9); }
-      50% { transform: scale(1.12); }
-      100% { transform: scale(1); }
-    }
-
     .controls {
+      margin-top: 16px;
       display: flex;
       gap: 10px;
-      margin-top: 16px;
     }
 
     button {
@@ -166,7 +177,7 @@
       font-weight: 800;
       cursor: pointer;
       transition: transform 0.08s ease, filter 0.15s ease;
-      box-shadow: 0 10px 14px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.08);
     }
 
     button:active { transform: translateY(1px) scale(0.99); }
@@ -178,17 +189,17 @@
     }
 
     .secondary {
-      background: #f2e0b6;
+      background: #f3e5bf;
       color: var(--text);
     }
 
     .warn {
-      background: linear-gradient(180deg, #64c4c7, #3fa5b0);
+      background: linear-gradient(180deg, #4eb6c4, #2e9ca8);
       color: white;
     }
 
     .message {
-      min-height: 28px;
+      min-height: 32px;
       margin-top: 12px;
       text-align: center;
       font-size: 0.85rem;
@@ -197,14 +208,20 @@
     }
 
     @media (max-width: 420px) {
-      .board { min-height: 300px; }
-      .hud { gap: 8px; }
-      .label { font-size: 0.6rem; }
+      .board { min-height: 304px; }
+      .hud { gap: 7px; }
+      .value { font-size: 1rem; }
+      .brand { font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
   <div class="game-shell">
+    <div class="top-bar">
+      <div class="brand">Merge Garden</div>
+      <div class="mini-badge" id="comboBadge">x1 Combo</div>
+    </div>
+
     <div class="hud">
       <div class="stat">
         <span class="label">Score</span>
@@ -218,6 +235,10 @@
         <span class="label">Level</span>
         <span class="value" id="levelValue">1</span>
       </div>
+      <div class="stat">
+        <span class="label">Goal</span>
+        <span class="value" id="goalValue">100</span>
+      </div>
     </div>
 
     <div class="board-wrap">
@@ -230,7 +251,7 @@
       <button class="warn" id="resetBtn">Reset</button>
     </div>
 
-    <div class="message" id="statusMessage">Merge plant seeds to grow a thriving garden!</div>
+    <div class="message" id="statusMessage">Fresh soil ready. Start merging your crops!</div>
   </div>
 
   <script>
@@ -238,29 +259,33 @@
     const board = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
 
     const ITEMS = {
-      1: { emoji: '🌱', colorA: '#86d97f', colorB: '#5abf58' },
-      2: { emoji: '🌿', colorA: '#6ecf78', colorB: '#44b95b' },
-      3: { emoji: '🌼', colorA: '#f6bb42', colorB: '#ef9f2b' },
-      4: { emoji: '🍋', colorA: '#ffd86a', colorB: '#f7b500' },
-      5: { emoji: '🍊', colorA: '#ff9f5a', colorB: '#f1703a' },
-      6: { emoji: '🌳', colorA: '#5ec1a6', colorB: '#3b9a7d' },
-      7: { emoji: '💎', colorA: '#6ec6ff', colorB: '#3e8ef7' },
-      8: { emoji: '🌙', colorA: '#8f7efc', colorB: '#5f52d6' },
-      9: { emoji: '✨', colorA: '#ffd4de', colorB: '#ff7ab6' }
+      1: { emoji: '🌱', a: '#8dd77d', b: '#60b85f' },
+      2: { emoji: '🌿', a: '#6bce7d', b: '#4cb362' },
+      3: { emoji: '🌼', a: '#f7c948', b: '#ef9f22' },
+      4: { emoji: '🍋', a: '#ffd96b', b: '#f3b100' },
+      5: { emoji: '🍊', a: '#ffb26f', b: '#ec7e3a' },
+      6: { emoji: '🌳', a: '#67d3b5', b: '#3ba68a' },
+      7: { emoji: '💎', a: '#74c7ff', b: '#3b8eed' },
+      8: { emoji: '🌙', a: '#8d7df8', b: '#5a4dc2' },
+      9: { emoji: '✨', a: '#ffb5d9', b: '#ff75a8' }
     };
 
     const state = {
       score: 0,
       coins: 0,
       level: 1,
-      lastMessage: 'Merge plant seeds to grow a thriving garden!'
+      combo: 1,
+      goal: 100,
+      lastMessage: 'Fresh soil ready. Start merging your crops!'
     };
 
     const boardEl = document.getElementById('board');
     const scoreValueEl = document.getElementById('scoreValue');
     const coinValueEl = document.getElementById('coinValue');
     const levelValueEl = document.getElementById('levelValue');
+    const goalValueEl = document.getElementById('goalValue');
     const statusMessageEl = document.getElementById('statusMessage');
+    const comboBadgeEl = document.getElementById('comboBadge');
 
     function createCell(x, y) {
       const cell = document.createElement('div');
@@ -273,6 +298,7 @@
           resolveBoard();
           renderBoard();
           updateHud();
+          playTone(430, 0.04, 'triangle');
         }
       });
       return cell;
@@ -290,13 +316,17 @@
     function randomValue() {
       const roll = Math.random();
       if (roll < 0.52) return 1;
-      if (roll < 0.76) return 2;
-      if (roll < 0.9) return 3;
+      if (roll < 0.8) return 2;
+      if (roll < 0.92) return 3;
       return 4;
     }
 
     function sampleValue() {
-      return Math.random() < 0.7 ? randomValue() : (Math.random() < 0.5 ? 5 : 6);
+      const roll = Math.random();
+      if (roll < 0.58) return randomValue();
+      if (roll < 0.78) return 5;
+      if (roll < 0.9) return 6;
+      return 7;
     }
 
     function countEmptyCells() {
@@ -315,63 +345,17 @@
     }
 
     function addRandomItem() {
-      const empty = [];
+      const empties = [];
       for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
-          if (board[x][y] === null) empty.push([x, y]);
+          if (board[x][y] === null) empties.push([x, y]);
         }
       }
 
-      if (!empty.length) {
-        state.lastMessage = 'Board full! Merge nearby plants.';
-        return false;
-      }
-
-      const [x, y] = empty[Math.floor(Math.random() * empty.length)];
+      if (!empties.length) return false;
+      const [x, y] = empties[Math.floor(Math.random() * empties.length)];
       board[x][y] = sampleValue();
       return true;
-    }
-
-    function mergeAdjacent() {
-      let mergedCount = 0;
-      let didMerge = false;
-
-      const visited = new Set();
-
-      for (let x = 0; x < BOARD_SIZE; x++) {
-        for (let y = 0; y < BOARD_SIZE; y++) {
-          const key = `${x},${y}`;
-          if (visited.has(key) || board[x][y] === null) continue;
-
-          const value = board[x][y];
-          const right = y + 1 < BOARD_SIZE ? board[x][y + 1] : null;
-          const down = x + 1 < BOARD_SIZE ? board[x + 1][y] : null;
-
-          if (right === value) {
-            board[x][y] = value + 1;
-            board[x][y + 1] = null;
-            mergedCount += 1;
-            didMerge = true;
-            visited.add(`${x},${y + 1}`);
-            state.score += value * 25;
-            state.coins += value * 5;
-          } else if (down === value) {
-            board[x][y] = value + 1;
-            board[x + 1][y] = null;
-            mergedCount += 1;
-            didMerge = true;
-            visited.add(`${x + 1},${y}`);
-            state.score += value * 25;
-            state.coins += value * 5;
-          }
-        }
-      }
-
-      if (mergedCount > 0) {
-        state.lastMessage = `Perfect merge! +${mergedCount * 25} score`;
-      }
-
-      return didMerge;
     }
 
     function compactBoard() {
@@ -382,7 +366,9 @@
         for (let y = 0; y < BOARD_SIZE; y++) {
           const value = board[x][y];
           if (value !== null) {
-            newBoard[Math.floor(writeIndex / BOARD_SIZE)][writeIndex % BOARD_SIZE] = value;
+            const row = Math.floor(writeIndex / BOARD_SIZE);
+            const col = writeIndex % BOARD_SIZE;
+            newBoard[row][col] = value;
             writeIndex += 1;
           }
         }
@@ -395,49 +381,117 @@
       }
     }
 
+    function mergeAdjacent() {
+      let didMerge = false;
+      let mergeCount = 0;
+
+      for (let x = 0; x < BOARD_SIZE; x++) {
+        for (let y = 0; y < BOARD_SIZE; y++) {
+          const current = board[x][y];
+          if (current === null) continue;
+
+          const right = y + 1 < BOARD_SIZE ? board[x][y + 1] : null;
+          const down = x + 1 < BOARD_SIZE ? board[x + 1][y] : null;
+
+          if (right === current) {
+            board[x][y] = current + 1;
+            board[x][y + 1] = null;
+            mergeCount += 1;
+            didMerge = true;
+            state.score += current * 35;
+            state.coins += current * 6;
+            state.combo = Math.min(9, state.combo + 1);
+          } else if (down === current) {
+            board[x][y] = current + 1;
+            board[x + 1][y] = null;
+            mergeCount += 1;
+            didMerge = true;
+            state.score += current * 35;
+            state.coins += current * 6;
+            state.combo = Math.min(9, state.combo + 1);
+          }
+        }
+      }
+
+      if (mergeCount > 0) {
+        playTone(620, 0.08, 'sine');
+        setTimeout(() => playTone(780, 0.06, 'triangle'), 60);
+        state.lastMessage = `Perfect merge! +${mergeCount * 35} score`;
+      }
+
+      return didMerge;
+    }
+
     function resolveBoard() {
-      let hasMerged = true;
+      let changed = true;
       let pass = 0;
-      while (hasMerged && pass < 10) {
-        hasMerged = mergeAdjacent();
+      while (changed && pass < 12) {
+        changed = mergeAdjacent();
         compactBoard();
         pass += 1;
       }
+
+      if (!changed) state.combo = 1;
     }
 
     function updateHud() {
-      state.level = Math.max(1, Math.floor(Math.sqrt(state.score + 1)) + 1);
+      state.level = Math.max(1, Math.floor(state.score / 120) + 1);
+      state.goal = state.level * 100;
+      comboBadgeEl.textContent = `x${state.combo} Combo`;
       scoreValueEl.textContent = state.score;
       coinValueEl.textContent = state.coins;
       levelValueEl.textContent = state.level;
+      goalValueEl.textContent = state.goal;
       statusMessageEl.textContent = state.lastMessage;
     }
 
     function renderBoard() {
       const cells = boardEl.children;
-      let i = 0;
+      let index = 0;
 
       for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
-          const cell = cells[i];
+          const cell = cells[index];
           const value = board[x][y];
-
-          cell.classList.remove('merged');
           cell.classList.toggle('empty', value === null);
           cell.innerHTML = '';
 
           if (value !== null) {
+            const meta = ITEMS[value] || ITEMS[9];
             const item = document.createElement('div');
             item.className = 'item';
-            const meta = ITEMS[value] || ITEMS[9];
             item.textContent = meta.emoji;
-            item.style.background = `linear-gradient(180deg, ${meta.colorA}, ${meta.colorB})`;
+            item.style.background = `linear-gradient(180deg, ${meta.a}, ${meta.b})`;
             cell.appendChild(item);
           }
 
-          i += 1;
+          index += 1;
         }
       }
+    }
+
+    function playTone(freq, duration, type = 'sine') {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+
+      const audioCtx = new AudioCtx();
+      const oscillator = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      oscillator.type = type;
+      oscillator.frequency.value = freq;
+      gain.gain.value = 0.04;
+
+      oscillator.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      oscillator.start();
+      setTimeout(() => {
+        oscillator.stop();
+        oscillator.disconnect();
+        gain.disconnect();
+        audioCtx.close();
+      }, duration * 1000);
     }
 
     function resetGame() {
@@ -450,13 +504,16 @@
       state.score = 0;
       state.coins = 0;
       state.level = 1;
-      state.lastMessage = 'Fresh soil prepared. Start growing your garden!';
+      state.combo = 1;
+      state.goal = 100;
+      state.lastMessage = 'Fresh soil ready. Start merging your crops!';
 
       board[0][0] = 1;
       board[0][1] = 1;
       board[1][0] = 2;
       board[2][2] = 3;
-      board[3][3] = 2;
+      board[4][4] = 2;
+
       renderBoard();
       updateHud();
     }
@@ -465,14 +522,15 @@
       const success = addRandomItem();
       if (success) {
         resolveBoard();
-        state.score += 10;
-        state.coins += 2;
-        state.lastMessage = 'A new seed has sprouted!';
+        state.score += 15;
+        state.coins += 3;
+        state.lastMessage = 'New seed has arrived!';
       } else {
-        state.lastMessage = 'Board is full! Merge some plants first.';
+        state.lastMessage = 'Board is full! Merge some crops first.';
       }
       renderBoard();
       updateHud();
+      playTone(320, 0.05, 'triangle');
     });
 
     document.getElementById('boostBtn').addEventListener('click', () => {
@@ -483,14 +541,13 @@
       }
 
       state.coins -= 15;
-      for (let i = 0; i < 3; i++) {
-        addRandomItem();
-      }
+      for (let i = 0; i < 3; i++) addRandomItem();
       resolveBoard();
-      state.score += 40;
-      state.lastMessage = 'Boost used! Three new plants appear.';
+      state.score += 50;
+      state.lastMessage = 'Boost activated. Fresh plants have spawned!';
       renderBoard();
       updateHud();
+      playTone(510, 0.08, 'sawtooth');
     });
 
     document.getElementById('resetBtn').addEventListener('click', resetGame);
